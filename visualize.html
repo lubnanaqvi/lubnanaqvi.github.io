@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<head lang="en">
+    <meta charset="UTF-8">
+    <style>
+        body{
+            margin: 2%;
+        }
+        h1{
+            text-align: center;
+        }
+        div{
+            display: block;
+        }
+        .lbdiv{
+            border: gray 1px solid;
+            height: 100px;
+            padding: 1%;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        #divlg{
+            border: gray 1px solid;
+            height: 350px;
+            padding: 1%;
+            overflow: scroll;
+        }
+        #divsm{
+            border: gray 1px solid;
+            height: 350px;
+            text-align: center;
+            padding: 1%;
+        }
+        #finaldiv{
+            height: 100px;
+            width: 50%;
+        }
+        #mydivider{
+            height: 30px;
+        }
+
+    </style>
+    <title>Visualize</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="jquery-2.1.1.min.js"></script>
+    <script>
+        var strselectedelement="background",sred="0",sgreen="0",sblue= "0",ctype="cn",scname="default";
+        var colorcodeslist=[
+                            ["Page background","default","0","0","0","notset"],
+                            ["Page text color","default","0","0","0","notset"],
+                            ["Top container background","default","0","0","0","notset"],
+                            ["Top container text-color","default","0","0","0","notset"],
+                            ["Small Text container background","default","0","0","0","notset"],
+                            ["Small Text container text-color","default","0","0","0","notset"],
+                            ["Large Text container background","default","0","0","0","notset"],
+                            ["Large Text container text-color","default","0","0","0","notset"],
+                            ["Heading","default","0","0","0","notset"],
+                            ["Button background","default","0","0","0","notset"],
+                            ["Button text-color","default","0","0","0","notset"]
+                            ];
+        var CSS_COLOR_NAMES = ["-------","AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black","BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse","Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson","Cyan","DarkBlue","DarkCyan","DarkGoldenRod","DarkGray","DarkGrey","DarkGreen","DarkKhaki","DarkMagenta","DarkOliveGreen","Darkorange","DarkOrchid","DarkRed","DarkSalmon","DarkSeaGreen","DarkSlateBlue","DarkSlateGray","DarkSlateGrey","DarkTurquoise","DarkViolet","DeepPink","DeepSkyBlue","DimGray","DimGrey","DodgerBlue","FireBrick","FloralWhite","ForestGreen","Fuchsia","Gainsboro","GhostWhite","Gold","GoldenRod","Gray","Grey","Green","GreenYellow","HoneyDew","HotPink","IndianRed","Indigo","Ivory","Khaki","Lavender","LavenderBlush","LawnGreen","LemonChiffon","LightBlue","LightCoral","LightCyan","LightGoldenRodYellow","LightGray","LightGrey","LightGreen","LightPink","LightSalmon","LightSeaGreen","LightSkyBlue","LightSlateGray","LightSlateGrey","LightSteelBlue","LightYellow","Lime","LimeGreen","Linen","Magenta","Maroon","MediumAquaMarine","MediumBlue","MediumOrchid","MediumPurple","MediumSeaGreen","MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed","MidnightBlue","MintCream","MistyRose","Moccasin","NavajoWhite","Navy","OldLace","Olive","OliveDrab","Orange","OrangeRed","Orchid","PaleGoldenRod","PaleGreen","PaleTurquoise","PaleVioletRed","PapayaWhip","PeachPuff","Peru","Pink","Plum","PowderBlue","Purple","Red","RosyBrown","RoyalBlue","SaddleBrown","Salmon","SandyBrown","SeaGreen","SeaShell","Sienna","Silver","SkyBlue","SlateBlue","SlateGray","SlateGrey","Snow","SpringGreen","SteelBlue","Tan","Teal","Thistle","Tomato","Turquoise","Violet","Wheat","White","WhiteSmoke","Yellow","YellowGreen"];
+        function mystart() {
+            makeclb();
+
+            var strdivlg=document.getElementById("divlg").innerHTML;
+            document.getElementById("divlg").innerHTML=strdivlg+"<br><br>";
+            for(var i=0;i<4;i++) {
+                strdivlg += strdivlg;
+            }
+            document.getElementById("divlg").innerHTML+=strdivlg;
+
+            $("#elb").change(function(){strselectedelement=this.value;});
+            $('input[type=radio][name=cpal]').bind('change',function() {ctype=this.value;makeclb();});
+            //{ctype=this.data("l");alert(ctype);makeclb();});
+        }
+        function makeclb(){
+            if(ctype!="cn") {
+                var strf = "";
+                var str = "";
+                for (var i = 0; i <= ctype; i++) {
+                    str += "<option value=" + i + "> " + i + "</option>";
+                }
+                strf = "<label> Red: </label><select id=redsel>" + str + "</select>";
+                strf += "<label> Green: </label><select id=greensel>" + str + " </select>";
+                strf += "<label> Blue: </label><select id=bluesel>" + str + "</select>";
+
+                document.getElementById("colordiv").innerHTML = strf;
+                $("#redsel").change(function(){sred=this.value;});
+                $("#greensel").change(function(){sgreen=this.value;});
+                $("#bluesel").change(function(){sblue=this.value;});
+            }
+            else{
+                var str="";
+                for(var i=0;i<CSS_COLOR_NAMES.length;i++){
+                    str+="<option value="+CSS_COLOR_NAMES[i]+">"+CSS_COLOR_NAMES[i]+"</option>";
+                }
+                document.getElementById("colordiv").innerHTML="<label> Color Names: </label><select id=csel>"+str+"</select>";
+                $("#csel").change(function(){scname=this.value;});
+            }
+        }
+        function makechanges(){
+            var scolor="",cclcounter=0;
+            if(ctype=="255")
+             scolor="rgb("+sred+","+sgreen+","+sblue+")";
+            if(ctype=="cn")
+                scolor=scname;
+           // alert(strselectedelement+","+sred+","+sblue+","+sgreen+","+scname+","+ctype);
+            //$("body").css("color","blue");
+            switch(strselectedelement) {
+                case "background":
+                        cclcounter=0;
+                    $("body").css("background",scolor);
+                    break;
+                case "color":
+                        cclcounter=1;
+                    $("#divsm").css("color",scolor);
+                    $("#divlg").css("color",scolor);
+                    break;
+                case "lbdiv":
+                        cclcounter=2;
+                    $("#lbdiv").css("background",scolor);
+                    break;
+                case "lbdiv text":
+                        cclcounter=3;
+                    $("#lbdiv").css("color",scolor);
+                    break;
+                case "divsm":
+                        cclcounter=4;
+                    $("#divsm").css("background",scolor);
+                    break;
+                case "divsm text":
+                        cclcounter=5;
+                    $("#divsm").css("color",scolor);
+                    break;
+                case "divlg":
+                        cclcounter=6;
+                    $("#divlg").css("background",scolor);
+                    break;
+                case "divlg text":
+                        cclcounter=7;
+                    $("#divlg").css("color",scolor);
+                    break;
+                case "h1":
+                        cclcounter=8;
+                    $("h1").css("color",scolor);
+                    break;
+                case "btnclass":
+                        cclcounter=9;
+                    $(".btnclass").css("background",scolor);
+                    break;
+                case "btnclass text":
+                        cclcounter=10;
+                    $(".btnclass").css("color",scolor);
+                    break;
+                default :
+                    alert("default");
+            }
+            if(ctype=="cn")
+                sred=sgreen=sblue="0";
+            if(ctype=="255")
+                scname="default";
+            colorcodeslist[cclcounter][1]=scname;
+            colorcodeslist[cclcounter][2]=sred;
+            colorcodeslist[cclcounter][3]=sgreen;
+            colorcodeslist[cclcounter][4]=sblue;
+            colorcodeslist[cclcounter][5]=ctype;
+        }
+        function showfinal(){
+            var str="<label id=flashyres>Here are your selected colors:</label><br>";
+            for(var i=0;i<colorcodeslist.length;i++)
+            {
+
+                if(colorcodeslist[i][5]!="notset") {
+                    if(colorcodeslist[i][5]=="cn"){
+                        str+=colorcodeslist[i][0]+": "+colorcodeslist[i][1];
+                    }
+                    else
+                    {
+                        str+=colorcodeslist[i][0]+": "+colorcodeslist[i][2]+" "+colorcodeslist[i][3]+" "+colorcodeslist[i][4];
+                    }
+                    str+="<br>";
+                }
+            }
+            document.getElementById("divlg").innerHTML=str;
+        }
+        //("change",function(){alert("hello");});
+    </script>
+</head>
+
+<body onload="mystart()">
+<h1>Visualize</h1>
+<div class="row">
+    <div class="col-sm-12"><div id="lbdiv">
+<label>Choose item:</label><select id="elb">
+    <option value="background">Page Background</option>
+    <option value="color">Page text color</option>
+        <option value="lbdiv">Top container background</option>
+        <option value="lbdiv text">Top container text-color</option>
+    <option value="divsm">Small Text container background</option>
+        <option value="divsm text">Small Text container text-color</option>
+        <option value="divlg">Large Text container background</option>
+        <option value="divlg text">Large Text container text-color</option>
+    <option value="h1">Heading color</option>
+    <option value="btnclass">Button background</option>
+        <option value="btnclass text">Button text-color</option>
+</select>
+<div id="colordiv"></div>
+        <input type="radio" name="cpal" value="cn" autocomplete="off" checked> Color Names
+        <input type="radio" name="cpal" value="255" autocomplete="off"> 256
+        <button onclick="makechanges()">Submit</button><br>
+        <button onclick="showfinal()">Click here when you have selected all colors.</button>
+        <br>
+        <br>
+
+    </div></div>
+    <div class="col-sm-12" id="mydivider"></div>
+
+    <div class="col-sm-3">
+<div id="divsm">This is a small text container with some text and buttons.<br><br>
+        <button class="btnclass">Button 1</button><br><br>
+        <button class="btnclass">Button 2</button><br><br>
+        <button class="btnclass">Button 3</button><br><br>
+    </div>
+        </div>
+<div class="col-sm-9">
+<div id="divlg">This is a larger container.  To use this page, simply select an item from the top listbox and choose colors.</div>
+</div>
+    </div>
+</body>
+</html>

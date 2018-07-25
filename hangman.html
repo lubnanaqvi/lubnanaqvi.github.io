@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        body
+        {
+            text-align: center;
+        }
+        .btnalpha
+        {
+            width: 20%;
+            height: 8%;
+
+        }
+        .btnalpha:disabled{
+            color: #999999
+        }
+        .btnstart
+        {
+            font-size: 120%;
+            background: #A00000;
+            color: white;
+        }
+        .thedisplayst
+        {
+            color: #A00000;
+            font-size: 200%;
+        }
+        .gamemsgst
+        {
+            padding: 1%;
+            color: red;
+            font-size: 120%;
+        }
+        .gamestatst
+        {
+
+            font-size: 120%;
+        }
+        .tblstyle
+        {
+            justify-content:space-between;
+            text-align: center;
+        }
+        .hstyle
+        {
+            color: #780000;
+            text-decoration: underline;
+
+        }
+    </style>
+
+
+    <meta charset="utf-8">
+    <title>Hangman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body onload="makebuttons()">
+<h1 class="hstyle">Hangman</h1>
+<div class="container-fluid">
+
+    <br>
+    <div class="row">
+
+        <div class="col-lg-5">
+            <div id='mydiv3'class='gamemsgst'>Press PLAY to start the game.</div>
+            <input type='button' id=mybutton class='btnstart' onclick=mybutton_click() value='   PLAY   '>
+            <form id=myform></form>
+        </div>
+
+        <div class="col-lg-7">
+            <div id='mydiv2' class='thedisplayst' ></div>
+            <div id='mydiv' class='gamestatst'></div>
+            <div id="hangman"></div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+    var mywords=[
+        ["BLUE","PINK","YELLOW","GREEN","WHITE","BLACK","ORANGE"],
+        ["ELEPHANT","KANGAROO","ADVARK","TRANTULA","WHALE","DOLPHIN","JAGUAR"],
+        ["DUBAI","TORONTO","LONDON","NEWYORK","KARACHI","KITCHENER","MUSCAT"],
+        ["UGLY","PRETTY","TALL","SHORT","FAST","SLOW","LAZY"],
+        ["TABLE","CHAIR","OVEN","WINDOW","PENCIL","BOOK","CRAYONS"]
+
+    ]
+    var mycats=["COLOURS","ANIMALS","CITIES","ADJECTIVES","THINGS"];
+    var mywfetcher,mycfetcher,theword,thecat,chances,thedisp;
+    var myhangman=[
+        ".... ======.............",
+        "....|.............|............",
+        "....0...........|............",
+        "..(.|.)..........|............",
+        "....|.............|............",
+        "...).(...........|............",
+        "..................|............",
+        "..................|............",
+        "..................|............",
+        ".........========...."
+    ]
+    function word_set()
+    {
+        thedisp="***************";
+        mywfetcher=Math.floor(Math.random()*10);
+        mycfetcher=Math.floor(Math.random()*10);
+        if (mywfetcher>mywords.length) mywfetcher-=mywords.length;
+        if (mycfetcher>mycats.length) mycfetcher-=mycats.length;
+        theword=mywords[mycfetcher][mywfetcher];
+        thecat=mycats[mycfetcher];
+        thedisp=thedisp.substr(0,theword.length);
+        chances=11;
+        document.getElementById("mybutton").disabled=1;
+        document.getElementById("mydiv2").innerHTML="";
+        document.getElementById("mydiv3").innerHTML="";
+        document.getElementById("hangman").innerHTML="";
+    }
+    function mybutton_click()
+    {
+        word_set();
+        //document.getElementById("mydiv").innerHTML+=" "+theword+" "+thecat;
+        document.getElementById("mydiv").innerHTML="The category is "+thecat+".";
+        document.getElementById("mydiv3").innerHTML="You have 10 chances.";
+        for (var i=0;i<theword.length;i++)
+        {
+            thedisp=setCharAt(thedisp,i,"*");
+            document.getElementById("mydiv2").innerHTML+="  "+thedisp[i]+"  ";
+        }
+        for(var j=0;j<26;j++)
+            document.getElementById("button"+j).disabled=0;
+
+    }
+    function makebuttons()
+    {
+        var mychar,str='';
+        for(var i=0;i<26;i++)
+        {
+            mychar=String.fromCharCode(65+i);
+            str+=' <input type="button" class="btnalpha" onclick=alphpress(this) id=button'+i+' value='+mychar+' disabled=1> ';
+        }
+        document.getElementById("myform").innerHTML='<br>'+str;
+    }
+    function alphpress(alph)
+    {
+
+        var charpress=alph.value;
+        var btnid=charpress.charCodeAt(0)-65;
+        document.getElementById("button"+btnid).disabled=1;
+        if(theword.indexOf(charpress)==-1)
+        {
+            chances--;
+            if(chances>1)
+            {
+                var mychances=chances-1;
+                document.getElementById("mydiv3").innerHTML="Letter not found.You have "+mychances+" more chances."; //10,9,8.....1
+                document.getElementById("hangman").innerHTML+=myhangman[10-chances]+"<br>";//0,1,2......9
+            }
+            if(chances==1)
+            {
+                document.getElementById("mydiv3").innerHTML="Letter not found.Last chance.";
+                document.getElementById("hangman").innerHTML+=myhangman[10-chances]+"<br>";
+            }
+            if(chances<1)
+            {
+                document.getElementById("mydiv3").innerHTML="Sorry, you lose. The word was "+theword;
+                document.getElementById("mydiv2").innerHTML=theword;
+                document.getElementById("mydiv").innerHTML="";
+                document.getElementById("mybutton").disabled=0;
+                disablealph();
+            }
+        }
+
+        else
+        {
+            for(var i=0;i<theword.length;i++)
+            {
+                if(charpress==theword[i])
+                {
+                    thedisp=setCharAt(thedisp,i,charpress);
+                    //alert(thedisp);
+                    //thedisp[i]=charpress;alert(charpress+thedisp);
+                }
+
+            }
+            document.getElementById("mydiv2").innerHTML="";
+            for(var j=0;j<thedisp.length;j++)
+            {
+                document.getElementById("mydiv2").innerHTML+="  "+thedisp[j]+"  ";
+            }
+        }
+        if(thedisp==theword)
+        {
+            document.getElementById("mydiv3").innerHTML="YOU WIN!";
+            document.getElementById("mydiv").innerHTML="";
+            document.getElementById("hangman").innerHTML="";
+            document.getElementById("mybutton").disabled=0;
+            disablealph();
+        }
+
+    }
+    function setCharAt(str,index,chr) {
+        if(index > str.length-1) return str;
+        return str.substr(0,index) + chr + str.substr(index+1);
+    }
+    function disablealph()
+    {
+        for(var i=0;i<26;i++)
+            document.getElementById("button"+i).disabled=1;
+    }
+</script>
+</body>
+</html>

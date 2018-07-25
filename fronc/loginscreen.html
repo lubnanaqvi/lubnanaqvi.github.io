@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Fronc Usage App</title>
+    <style>
+
+        .homescreen,.loginscreen,.chescreen{
+            height: 640px;
+            width: 360px;
+            border: solid 1px black;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            text-align: center;
+            line-height: 0.8em;
+            position: fixed;
+        }
+        h1{
+            padding:-5%;
+            font-size:42px;
+        }
+        .logoimg {
+            margin-top:5%;
+            margin-bottom: 0%;
+            margin-left:5%;
+        }
+        .pc-button {
+            position:relative;
+            width:10px;
+            height:10px;
+            font-size:1px;
+            border: 1px solid #4a4a4a;
+            border-radius: 50%;
+            background-color: #979797;
+            color:rgba(23,23,23,0);
+            display:inline-block;
+            margin-top: 2%;
+
+        }
+        .kpbtn{
+            display:block;
+            width:50px;
+            height:50px;
+            line-height:50px;
+            border: 2px solid #979797;
+            border-radius: 50%;
+            color:#f5f5f5;
+            text-align:center;
+            text-decoration:none;
+            background-color: #54536A;
+            box-shadow: 0 0 3px #9B9B9B;
+            font-size:20px;
+            font-weight:bold;
+            display: inline;
+            margin: 2%;
+            cursor: pointer;
+        }
+        .kpbtn:hover{
+            background-color: #fcfcfc;
+        }
+        .mylbl {
+            padding-top:0%;
+            font-size:18px;
+        }
+        .homescreen{
+            line-height: 1.5em;
+            background-color:#F4F81C;
+        }
+        .iconsholder{
+            background-color: white;
+            position: fixed;
+            width:360px;
+            height:50px;
+        }
+        .rs{
+            color:red;
+        }
+        .msgc{
+            position:fixed;
+            top:150px;
+            left:80px;
+            z-index: 1;
+            margin:-2%;
+        }
+        .usage{
+            position:fixed;
+            top:145px;
+            left:40px;
+            z-index: 1;
+            border: solid 2px #B38F90;
+        }
+        .cpanel{
+            background: white;
+            text-align: left;
+            line-height: 2em;
+            margin:2%;
+            position:fixed;
+            top:340px;
+            left:70px;
+            z-index: 1;
+            border: solid 2px #B38F90;
+            padding:2%;
+        }
+        .optionsdiv, .settingsdiv {
+            background-color: #54536A;
+            color:#fffffd;
+            display:none;
+            text-align: left;
+            padding:2%;
+            height: 520px;
+            width:330px;
+            z-index:101;
+
+        }
+        .oico {
+            display: block;
+            float:left;
+        }
+        .sico {
+            display: block;
+            float:right;
+        }
+        #orgoi{
+            position:fixed;
+            margin:0%;
+            top:65px;
+            left:10px;
+            z-index:1;
+        }
+        #orgsi{
+            position:fixed;
+            margin:0%;
+            top:65px;
+            left:320px;
+            z-index:1;
+        }
+        .oul,.sul{
+            list-style-type: none;
+            display: block;
+            text-align: left;
+            padding:0%;
+
+        }
+        .optionsdiv{
+            float: left;
+            position:relative;
+            left:-100px;
+            top:35px;
+            margin:1%;
+        }
+        .settingsdiv {
+            float: right;
+            position: relative;
+            right: -100px;
+            top:35px;
+            margin:1%;
+        }
+        li:hover{
+            background-color: #fffffd;
+            color:#54536A;
+            cursor: pointer;
+        }
+        .chescreen{
+            text-align:left;
+            line-height: 2em;
+            background-color: #F4F81C;
+        }
+        .froncheader{
+            background-color:#894CDA;
+            height:50px;
+            color:#fffffd;
+            font-weight: 800;
+            text-align:center;
+            font-size:2em;
+        }
+        .bell{
+            margin:1.5%;
+            float:left;
+        }
+        .fheading{
+            vertical-align: -10px;
+            margin-left:-10%;
+        }
+        .froncbutton {
+            background-color: #4a4a4a;
+            color:#fffffd;
+            box-shadow: #979797;
+            border-radius: 5px;
+            padding:2% 5% 2% 5%;
+            margin:3%;
+        }
+        .fronctextbox{
+            border-radius: 5px;
+            font-size: 16px;
+            border: solid 2.5px #979797;
+            margin:3%;
+        }
+        .backbtn{
+            float:right;
+            margin:0% 2% 5% 2%;
+        }
+        .addchanged{
+            background-color: #B38F90;
+            border: solid 3px #979797;
+            color:#fffffd;
+            width:320px;
+            margin:1%;
+            position:fixed;
+        }
+        .beforechange{
+            position:fixed;
+            background-color:white;
+            margin:2%;
+            padding:1%;
+            border: solid 3px #979797;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        //X8H)afE3Oc)kcvP@AAu2
+        var mypwd,mycounter,epwd,rval,oflag,sflag;
+        $(document).ready(function() {
+            mypwd='1111';
+            mycounter=0;
+            epwd='';
+            oflag=false;
+            sflag=false;
+            $('.homescreen').hide();
+            $('.chescreen').hide();
+            $('.addchanged').hide();
+            $('input[type=radio][name=uname]').change(function(){
+                rval=$('input:radio[name=uname]:checked').data('uid')+'.jpg';
+                $('.usage').attr('src',rval);
+            });
+            $('.oico').on('click',function(){
+                if(!oflag) {
+                    $('.optionsdiv').show().animate({left: '0px'}, 100);
+                    oflag = true;
+                    $('#orgsi').hide();
+                }
+                else{
+                    $('.optionsdiv').animate({left:'-400px'},100).hide();
+                    oflag=false;
+                    $('#orgsi').show();
+                }
+            });
+            $('.sico').on('click',function () {
+               if(!sflag)
+               {
+                   $('.settingsdiv').show().animate({right:'10px'},100);
+                   sflag=true;
+                    $('#orgoi').hide();
+               }
+                else
+               {
+                   $('.settingsdiv').animate({right:'-100px'},100).hide();
+                   sflag=false;
+                   $('#orgoi').show();
+               }
+            });
+            $('li').on('click', function () {
+                if(this.innerHTML==='Log Out')
+                    location.reload(true);
+                else if(this.innerHTML!=='Change Email address')
+                    alert('Click on Change Email');
+                else
+                    changeEmail();
+
+            });
+            $('.cbtn').on('click',function(){
+                $('.addchanged').show();
+                $('.beforechange').hide();
+            });
+            $('.backbtn').on('click', function () {
+                $('.beforechange').show();
+                $('.addchanged').hide();
+                $('.chescreen').hide();
+                $('.homescreen').show();
+            })
+        });
+        function changeEmail(){
+            $('.settingsdiv').animate({right:'-100px'},100).hide();
+            sflag=false;
+            $('#orgoi').show();
+            $('.homescreen').hide();
+            $('.chescreen').show();
+        }
+        function kpevent(i){
+            document.getElementById('pc'+mycounter).style.backgroundColor='#54536A';
+            if(mycounter<4)
+            {
+                epwd+=i;
+                if(epwd.length===4)
+                {
+                    if (epwd === '1111')
+                        loginsuccess();
+                    else
+                        loginfail();
+                }
+            }
+            mycounter++;
+        }
+        function loginsuccess(){
+            //alert('imagine home screen');
+            $('.loginscreen').hide();
+            $('.homescreen').show();
+        }
+        function loginfail(){
+            //alert('Enter 1111 as passcode');
+            //login fail screen show
+            epwd='';
+            mycounter=-1;
+            shakepcbtns();
+            for(var j=0;j<4;j++)
+            {
+                document.getElementById('pc'+j).style.backgroundColor='#aaaaaa';
+            }
+        }
+        function shakepcbtns(){
+             $('.pc-button').animate({left: '5px'},15).animate({left:'0px'},15).animate({left: '5px'},15).animate({left:'0px'},15);
+                //$('.pc-button').animate({right: '25px'});
+
+                //$('.pc-button').style.right='20px';
+        }
+
+    </script>
+</head>
+<body>
+<div class="loginscreen">
+    <img class='logoimg' src="logo.jpg">
+    <h1>Welcome Syed</h1>
+    <label class="mylbl">Enter passcode:</label><br>
+    <div class="pc-button"  id="pc0">x</div>
+    <div class="pc-button"  id="pc1">x</div>
+    <div class="pc-button"  id="pc2">x</div>
+    <div class="pc-button"  id="pc3">x</div>
+    <br><br><br>
+    <button class="kpbtn" onclick="kpevent(1)">1</button>
+    <button class="kpbtn" onclick="kpevent(2)">2</button>
+    <button class="kpbtn" onclick="kpevent(3)">3</button><br>
+    <button class="kpbtn" onclick="kpevent(4)">4</button>
+    <button class="kpbtn" onclick="kpevent(5)">5</button>
+    <button class="kpbtn" onclick="kpevent(6)">6</button><br>
+    <button class="kpbtn" onclick="kpevent(7)">7</button>
+    <button class="kpbtn" onclick="kpevent(8)">8</button>
+    <button class="kpbtn" onclick="kpevent(9)">9</button><br>
+    <button class="kpbtn" onclick="kpevent(0)">0</button>
+</div>
+<div class="homescreen">
+    <div class="froncheader"><img class='bell' src="logoico.jpg"><span class="fheading">frOnc</span></div>
+    <div class="optionsdiv">
+
+        <ul class="oul">
+            <li>Pay bills</li>
+            <li>Switch plans</li>
+            <li>Buy more data</li>
+            <li>Add ons</li>
+            <li>Other Services</li>
+            <li>Other Services</li>
+            <hr>
+            <li>Log Out</li>
+        </ul>
+    </div>
+    <div class="settingsdiv">
+
+        <ul class="sul">
+            <li>Switch to Pie charts</li>
+            <li>Switch to Bar graphs</li>
+            <li>Customize View</li>
+            <li>Change Email address</li>
+            <li>Disable passcode</li>
+            <li>Other Settings</li>
+        </ul>
+    </div>
+    <div class="iconsholder">
+    <img class="oico" id='orgoi' src="options.jpg">
+    <img class="sico" id='orgsi' src="settings.jpg">
+    </div>
+        <br><br><br>
+    <label class="msgc">Cycle ends in:<span class="rs">3 days</span></label>
+    <img class='usage' src="datausage.jpg">
+    <div class="cpanel">
+    <label>Show usage for:</label><br>
+    <input type="radio" class='rg' name="uname" id=rdata data-uid="datausage" autocomplete="off" checked="true">Data<br>
+    <input type="radio" class='rg' name="uname" id=rmin data-uid="minusage" autocomplete="off">Minutes<br>
+    <input type="radio" class='rg' name="uname" id=rsms data-uid="smsusage" autocomplete="off">Text / SMS<br>
+    </div>
+</div>
+
+<div class="chescreen">
+    <div class="froncheader"><img class='bell' src="logoico.jpg"><span class="fheading">frOnc</span></div>
+    <div class="optionsdiv">
+
+        <ul class="oul">
+            <li>Pay bills</li>
+            <li>Switch plans</li>
+            <li>Buy more data</li>
+            <li>Add ons</li>
+            <li>Other Services</li>
+            <li>Other Services</li>
+            <hr>
+            <li>Log Out</li>
+        </ul>
+    </div>
+    <div class="settingsdiv">
+
+        <ul class="sul">
+            <li>Switch to Pie charts</li>
+            <li>Switch to Bar graphs</li>
+            <li>Customize View</li>
+            <li>Change Email address</li>
+            <li>Disable passcode</li>
+            <li>Other Settings</li>
+        </ul>
+    </div>
+    <div class="iconsholder">
+        <img class="oico" id='orgoi' src="options.jpg">
+        <img class="sico" id='orgsi' src="settings.jpg">
+    </div>
+    <br><br><br>
+    <div class="beforechange">
+    <label>Please enter your New Email Address:</label><br>
+    <input type="text" class="fronctextbox">
+    <button class="froncbutton cbtn">Confirm</button>
+    </div>
+    <div class="addchanged">
+        <label>We have sent you an email with a link. Please follow that link to confirm your email address.</label>
+        <button class="froncbutton backbtn">Back</button>
+    </div>
+</div>
+
+</body>
+</html>

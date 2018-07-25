@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            margin: 2%;
+            color: rgba(49, 148, 134, 0.96);
+            text-align: center;
+        }
+        div
+        {
+            padding: 1%;
+            text-align: center;
+        }
+        .alphbtn
+        {
+            height: 50px;
+            width: 50px;
+            color: whitesmoke;
+            background:  cornflowerblue;
+        }
+        .alphbtn:disabled
+        {
+            background: darkgray;
+        }
+        #wordbtncontainer{
+            display: block;
+            text-align: center;
+        }
+        #msgdiv{
+            font-size: xx-large;
+        }
+        #pwdiv{
+            font-size: 200%;
+            font-weight: bolder;
+            color: mediumslateblue;
+        }
+        #sobtn,#pabtn{
+            background: lightblue;
+            color:floralwhite;
+        }
+        #sobtn:disabled,#pabtn:disabled{
+            background: darkgray;
+        }
+        .hstyle
+        {
+            color: CornFlowerBlue;
+            text-decoration: underline;
+
+        }
+
+    </style>
+    <script src="jquery-2.1.1.min.js"></script>
+    <script>
+        var mywfetcher,mylfetcher,theword,jword,playerword;
+        var mydata=[
+                ["PIN","BOY","SHIP","LIP","BOOK","DOOR","RICH","PINK","BOX","FOX"],
+                ["TRICK","HOUSE","MAGIC","LEMON","MOUTH","TRAIN","TIGER","CHEST","SWEET","PLACE"],
+                ["CHILDREN","SEASON","BLOCKED","COMPUTER","BEAUTIFUL","HORRIBLE","SLEEPY","DRUMMER","INVISIBLE","YOURSELF"]
+                ];
+        function myfirst(){
+            $('input[type=radio][name=dlevel]').bind('change',function() {playagain();});
+            letsplay();
+        }
+        function letsplay(){
+            chooseword();
+            makewordbuttons();
+
+        }
+        function chooseword(){
+            mylfetcher=$('input:radio[name=dlevel]:checked').data("l");
+            mywfetcher=Math.floor(Math.random()*mydata[mylfetcher].length);
+            theword=mydata[mylfetcher][mywfetcher];
+            var j="";
+            var k=Math.floor(Math.random()*theword.length);
+            for(var i=0;i<theword.length;i++) {
+                while(j.indexOf(k)!=-1){
+                    k=Math.floor(Math.random()*theword.length);
+                }
+                j+=k;
+            }
+            jword="";
+            for(var i=0;i<theword.length;i++){
+                jword+=theword[j[i]];
+            }
+        }
+
+        function makewordbuttons(){
+            playerword='';
+            var str='';
+            for(var i=0;i<jword.length;i++)
+            {
+                str+='<div class="col-sm-1">';
+                str+='<button class="alphbtn" id="alph'+i+'" onclick="wordguesser(this)" value="'+jword[i]+'">'+jword[i]+'</button>';
+                str+='</div>';
+            }
+            document.getElementById("wordbtncontainer").innerHTML=str;
+        }
+        function wordguesser(x){
+            x.disabled=true;
+            playerword+= x.value;
+            document.getElementById("pwdiv").innerHTML=playerword;
+            if(playerword==theword)
+            {
+                document.getElementById("msgdiv").innerHTML="<t2>You guessed it right.You win!</t2>";
+                document.getElementById("sobtn").disabled=true;
+            }
+            else
+                if(playerword.length==theword.length)
+                {
+                    document.getElementById("msgdiv").innerHTML="<t2>That's not the word. Try again.</t2>";
+                    startover();
+                }
+        }
+        function startover(){
+            playerword="";
+            for(var i=0;i<theword.length;i++)
+                document.getElementById("alph"+i).disabled=false;
+            document.getElementById("pwdiv").innerHTML=playerword;
+        }
+        function playagain(){
+            mywfetcher="";
+            mylfetcher="";
+            theword="";
+            jword="";
+            playerword="";
+            document.getElementById("msgdiv").innerHTML="";
+            document.getElementById("pwdiv").innerHTML="";
+            document.getElementById("sobtn").disabled=false;
+            letsplay();
+        }
+        </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Word Jumble</title>
+    </head>
+<body onload="myfirst()">
+<h1 class="hstyle">Word Jumble</h1>
+<div class="row">
+    <div class="col-sm-6">
+        <t1 style="font-size:150%">Difficulty:</t1>
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary active" >
+                <input type="radio" name="dlevel" data-l=0 autocomplete="off" checked> Easy
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="dlevel" data-l=1 autocomplete="off"> Medium
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="dlevel" data-l=2 autocomplete="off"> Hard
+            </label>
+        </div>
+    </div>
+    <div class="col-sm-12"></div>
+    <div class="col-sm-3">
+        <button id="sobtn" onclick="startover()">Start Over</button>
+    </div>
+    <div class="col-sm-3">
+        <button id="pabtn" onclick="playagain()" >Play Again</button>
+    </div>
+
+    <div class="col-sm-12">
+        <div id="wordbtncontainer"></div>
+    </div>
+    <div class="col-sm-12">
+        <div id="pwdiv"></div>
+    </div>
+
+    <div class="col-sm-6">
+        <div id="msgdiv"></div>
+    </div>
+</div>
+</body>
+</html>

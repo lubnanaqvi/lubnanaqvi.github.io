@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        body{
+            padding:5%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <title>Wordnik Dictionary Exercise</title>
+    <script>
+        $(document).ready(function() {
+            $("#parse").click(process);
+            function process() {
+                $("#results").empty();
+                var keyword = $("#search").val();
+                if (keyword == "") {
+                    alert("Your input is empty.");
+                }
+                else {
+                    var baseurl = "http://api.wordnik.com:80/v4/word.json/"+keyword+"/definitions";
+                    var limit = "limit=200";
+                    var includeRelated = "includeRelated=true";
+                    var useCanonical = "useCanonical=false";
+                    var includeTags = "includeTags=false";
+                    var api_key = "api_key=112702022cfd4946838050e9ff3066f253faeb8bc7be6d90e";
+                    var url = baseurl+"?"+limit+"&"+includeRelated+"&"+useCanonical+"&"+includeTags+"&"+api_key;
+                    $.getJSON(url, function(data){
+                    console.log(data);
+                    var count = data.length;
+                    if (count == 0) {
+                        $("#results").html("No definition found");
+                    } else {
+                        $.each(data, function(i,o){
+                            var definition = o.text;
+                            $("#results").append("<li>"+definition+"</li>");
+                        });
+                    }
+                });
+            }
+        }
+            });
+    </script>
+</head>
+<body>
+<input type="text" id="search" placeholder="Search by keyword" />
+<button id="parse">Process</button>
+<div id="results">-Definitions go here-</div>
+</body>
+</html>

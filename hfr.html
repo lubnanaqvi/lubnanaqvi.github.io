@@ -1,0 +1,216 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Yellowtail" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Salsa" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body{
+            margin:3%;
+            text-align: center;
+            background-color: #F75D59;
+            color: white;
+            font-family: Salsa;
+        }
+        h1{
+            font-family: Yellowtail;
+            font-size: 3em;
+        }
+        textarea{
+            height: 50%;
+            width: 70%;
+            display: block;
+            margin: auto;
+        }
+        #micpic{
+            display: inline;
+            height:40px;
+            background-color: white;
+            border-radius: 50px;
+            border: solid 2px grey;
+        }
+        #speechfb{
+            display: inline;
+            font-size: 1.5em;
+            padding: 0% 1% 1% 1%;
+            vertical-align: 50%;
+        }
+        #ACdiv {
+            font-size: 1em;
+        }
+        #ACul li{
+            text-decoration: none;
+            display: inline;
+            padding: 2%;
+            margin:1%;
+            opacity:0.5;
+            cursor: pointer;
+        }
+        #btn{
+            padding:1%;
+            margin:1%;
+        }
+    </style>
+    <title>Hands-free Recipe</title>
+</head>
+<body>
+<div class="row">
+    <h1>Hands-free Recipe</h1>
+</div>
+<div class="row">
+    <div id="SRdiv"><!--Speech Recognition div-->
+        <img id='micpic' class="speechelements" src="listening.png">
+        <p id="speechfb" class="speechelements">Say something...</p>
+        <p id="notsupported"></p>
+    </div>
+</div>
+<div class="row">
+    <div id="ACdiv"><!--Available Commands-->
+        <ul id="ACul">
+            <label id="ts" class="speechelements">Try Saying:</label>
+            <li id="li0" onclick="myreader('start')" class="myli">Start</li>
+            <li id="li1" onclick="myreader('stop')" class="speechelements">Stop</li>
+            <li id="li2" onclick="myreader('next')" class="myli">Next</li>
+            <li id="li3" onclick="myreader('back')" class="myli">Back</li>
+            <li id="li4" onclick="myreader('repeat')" class="myli">Repeat</li>
+            <li id="li5" onclick="myreader('start again')" class="myli speechelements">Start Again</li>
+        </ul>
+        <button id="btn" onclick="mybuttonreader()">Read Recipe</button>
+    </div>
+</div>
+<div class="row">
+    <textarea id="recipetextbox"></textarea>
+</div>
+<div class="row">
+    <div><a href="https://responsivevoice.org">ResponsiveVoice-NonCommercial</a> licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img title="ResponsiveVoice Text To Speech" src="https://responsivevoice.org/wp-content/uploads/2014/08/95x15.png" alt="95x15" width="95" height="15"></a></div>
+</div>
+
+</body>
+<script>
+    var endlistener=false;
+    var mystep=0;
+    var stepified;
+    $(document).ready(function() {
+        flash('#speechfb');
+        startlistening();
+    });
+    function startlistening(){
+        try {
+            var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 5;
+            recognition.start();
+
+            recognition.onresult = function (event) {
+                this.stop();
+                var usercommand = event.results[0][0].transcript;
+                document.getElementById('speechfb').innerHTML = usercommand;
+                myreader(usercommand);
+                this.start();
+            }
+            recognition.onend = function (event) {
+                if (!endlistener) {
+                    recognition.start();
+                }
+                else
+                    responsiveVoice.speak('Turning off voice recognition. Please press the Read Recipe button to start again');
+
+            };
+        }
+        catch(e){
+            var saythis='This browser does not support Voice Commands. You can still click on the commands to hear the recipe in steps. For a truly hands-free experience visit this website in Google Chrome on a desktop device.';
+            document.getElementById('notsupported').innerHTML=saythis;
+            myspeaker(saythis);
+            $('.speechelements').hide();
+            $('.myli').css({'border':'solid 1px grey','background-color':'navy','opacity':'1'});
+            $('.myli').hover(function(){$(this).css('opacity','0.5');},function(){$(this).css('opacity','1');});
+        }
+
+    }
+    function myreader(usercommand) {
+        var uc = ['start', 'stop', 'next', 'back', 'repeat', 'start again'];
+        var myfuncarray = [
+            function () {
+                var recipe = document.getElementById("recipetextbox").value;
+                if (recipe.length == 0)
+                    responsiveVoice.speak('Please enter a recipe in the text box');
+                else {
+                    mystep = 0;
+                    stepified = recipe.split('\n');
+                }
+            },
+            function () {//stop
+                endlistener = true;
+                console.log('hello from stop '+endlistener);
+            },
+            function () {//next
+                console.log(mystep);
+                mystep++;
+                if (mystep >= stepified.length) {
+                    responsiveVoice.speak('Reached the end of the recipe. Cannot go to the next step.');
+                    endlistener = true;
+                }
+            },
+            function () {//back
+                if (mystep <= 0) {
+                    responsiveVoice.speak('Already at the start of the recipe.');
+                    mystep = 0;
+                }
+                else
+                    mystep--;
+            },
+            function () {//repeat
+                mystep = mystep;
+            },
+            function () {//start again
+                mystep = 0;
+            }
+        ];
+        var commandfound = -1;
+        for (var i = 0; i < uc.length; i++) {
+            if (usercommand.indexOf(uc[i]) !== -1) {
+                commandfound = i;
+                document.getElementById('li' + i).style.opacity = 1;
+            }
+        }
+        if(!endlistener) {
+            if (commandfound !== -1) {
+                myfuncarray[commandfound]();
+                myspeaker(stepified[mystep]);
+                if(document.getElementById('notsupported').innerHTML.length===0)
+                    myeffects(commandfound);
+            }
+            else
+                responsiveVoice.speak('Please say a command from the list');
+        }
+    }
+    function flash(e){
+        function looper() {
+            $(e).animate({opacity:'+=1'}, 1000);
+            $(e).animate({opacity:'-=0.5'}, 1000, looper);
+        }
+        looper();
+    }
+    function myspeaker(x){
+        responsiveVoice.speak(x);
+    }
+    function myeffects(x){
+        setTimeout(
+                function () {
+                    document.getElementById('speechfb').innerHTML='Say something...';
+                    document.getElementById('li'+x).style.opacity=0.5;
+                },1000);
+    }
+    function mybuttonreader(){
+        document.getElementById('speechfb').innerHTML='Read recipe';
+        mystep=0;
+        endlistener=false;
+        myreader('start');
+        if(document.getElementById('notsupported').innerHTML.length===0)
+            startlistening();
+    }
+</script>
+</html>

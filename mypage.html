@@ -1,0 +1,306 @@
+<html ng-app="sortable">
+<head>
+    <style>
+        .even {
+            background-color: #A0A0A0;
+        }
+        .highlighted{
+            background-color:yellow;
+        }
+        .loading{
+            cursor:wait;
+        }
+        table{
+            width:100%;
+        }
+
+    </style>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+    <script>
+        var sortable=angular.module("sortable",[]);
+        function mymatcher(str1, str2) {
+            str1=str1.toLowerCase();
+            str2=str2.toLowerCase();
+            str1=mycleaner(str1);
+            str2=mycleaner(str2);
+            if(str1==""||str2=="")
+                return false;
+            if(str1==str2)
+                return true;
+            else if(str1.indexOf(str2)!=-1)
+            {
+                var c=str1.charAt(str1.indexOf(str2)+str2.length);
+                if(c!=" ")
+                return false;
+                return true;
+            }
+            else if(str2.indexOf(str1)!=-1)
+            {
+                var c=str2.charAt(str2.indexOf(str1)+str1.length);
+                if(c!=" ")
+                return false;
+                return true;
+            }
+            else
+                return false;
+        }
+        function mycleaner(str){
+            for(var i=0;i<str.length;i++)
+            {
+                var j=str.charCodeAt(i);
+                if(!((j>=97&&j<=122)||(j>=48&&j<=57)))
+                    str=str.replace(str.charAt(i)," ");
+
+            }
+            return str;
+        }
+        function mycleanerCAPS(str){
+            for(var i=0;i<str.length;i++)
+            {
+                var j=str.charCodeAt(i);
+                if(!((j>=97&&j<=122)||(j>=48&&j<=57)||(j>=65&&j<=90)))
+                    str=str.replace(str.charAt(i)," ");
+
+            }
+            return str;
+        }
+
+        sortable.controller("sortableCtrl",function($scope,$http){
+
+            //get all products from products.json in myProducts
+            $http.get("products.json").success(function(response){
+                $scope.loadingContent=true;
+                $scope.myProducts=response;
+                $scope.include_extras=false;
+            });
+
+            //get all listings from listings.json in myListings
+            $http.get("listings.json").success(function(response){
+                $scope.myListings=response;
+                $scope.makeResult();
+            })
+                    .error(function(status){alert("Error loading listings.json"+status);});
+
+            //start the sorting
+            $scope.startSorting=function() {
+
+                //make an array of all manufacturers manarr
+                $scope.manarr = [{manufacturer: ""}];
+                angular.forEach($scope.myProducts, function (element) {
+                    var i = -1;
+                    angular.forEach($scope.manarr, function (manarrelement) {
+                        if (manarrelement.manufacturer == element.manufacturer) {
+                            i++;
+                        }
+                    });
+                    if (i == -1)
+                        $scope.manarr.push({manufacturer: element.manufacturer});
+                });
+
+                //regroup listings with respect to manufacturer
+                $scope.sortedListings = [{title: "", manufacturer: "", currency: "", price: "",flag:false}];
+                $scope.sortedListingsHelper = [{manufacturer: "", firstlisting: "", lastliting: ""}];
+
+                //declare and set counters
+                var count = 0;
+                var flisting = 0;
+                var llisting = 0;
+
+                angular.forEach($scope.manarr, function (cmanarr) {
+                    angular.forEach($scope.myListings, function (clisting) {
+                        if (mymatcher(cmanarr.manufacturer, clisting.manufacturer)) {
+                            $scope.sortedListings.push({title:clisting.title,manufacturer:clisting.manufacturer,currency:clisting.currency,price:clisting.price,flag:false});
+                            count++;
+                        }
+                    });
+                    if (count != 0) {
+                        llisting = flisting + count - 1;
+                        $scope.sortedListingsHelper.push({
+                            manufacturer: cmanarr.manufacturer,
+                            firstlisting: flisting,
+                            lastlisting: llisting
+                        });
+                        flisting = llisting + 1;
+                        count = 0;
+                    }
+                });
+
+                //get all the listings whose manufacturers are not in manarr
+                angular.forEach($scope.myListings, function (clisting) {
+                    angular.forEach($scope.manarr, function (cmanarr) {
+                        if (mymatcher(cmanarr.manufacturer, clisting.manufacturer)) {
+                            count++;
+                        }
+                    });
+                    if (count == 0) {
+                        $scope.sortedListings.push({title:clisting.title,manufacturer:clisting.manufacturer,currency:clisting.currency,price:clisting.price,flag:false});
+                    }
+                    else
+                        count = 0;
+                });
+                $scope.sortedListingsHelper.push({
+                    manufacturer: "Extras",
+                    firstlisting: llisting + 1,
+                    lastlisting: $scope.sortedListings.length
+                });
+
+
+            }
+
+
+            //start the actual searching
+            $scope.startSearching=function(){
+
+                //declare the array of Results
+                $scope.myResult=[{product_name:"",listings:[{title:"",manufacturer:"",currency:"",price:""}]}];
+
+                //go through myProducts one by one
+                angular.forEach($scope.myProducts,function(cproduct) {
+                    var arrlisting=[{title:"",manufacturer:"",currency:"",price:""}];
+
+                    //get the manufacturer to lookup for the current product-  manflookup,cproduct
+                    var manflookup = "";
+                    angular.forEach($scope.manarr, function (cmanarr) {
+                        if (mymatcher(cmanarr.manufacturer, cproduct.manufacturer)) {
+                            manflookup = cproduct.manufacturer;
+                        }
+                    });
+
+                    //get the start and end position of the listings by that manufacturer in the sortedListings
+                    //from sortedListingsHelper
+                    var startpos = 0;
+                    var endpos = 0;
+                    angular.forEach($scope.sortedListingsHelper, function (chelper) {
+                        if (mymatcher(chelper.manufacturer, manflookup)) {
+                            startpos = chelper.firstlisting;
+                            endpos = chelper.lastlisting;
+                            //return;
+                        }
+                    });
+
+                    //now for the actual searching
+                    //strp is a string that combines all the feilds of cproduct
+                    //{"product_name":"Casio_XV-3","manufacturer":"Casio","model":"XV-3","announced-date":"2000-02-23T19:00:00.000-05:00"}
+                    var strp=[cproduct.product_name];
+
+                    for(var i=startpos+1;i<=endpos;i++)
+                    {
+                        var clisting=$scope.sortedListings[i];
+                        var strl=clisting.title;
+                        var count=0;
+                        for(var j=0;j<strp.length;j++){
+                            if(mymatcher(strp[j],strl))
+                                count++;
+                        }
+                        if(count>0&&(!clisting.flag)) {
+                            arrlisting.push({
+                                title: clisting.title,
+                                manufacturer: clisting.manufacturer,
+                                currency: clisting.currency,
+                                price: clisting.price
+                            });
+                            clisting.flag=true;
+                           // $scope.sortedListings.splice(i, 1);
+                        }
+
+                    }
+
+                    //Now search listings whose manufacturers are not in manarr
+                    if($scope.include_extras) {
+
+                        startpos = $scope.sortedListingsHelper[$scope.sortedListingsHelper.length - 1].firstlisting;
+                        endpos = $scope.sortedListingsHelper[$scope.sortedListingsHelper.length - 1].lastlisting;
+                        for (var i = startpos; i <= endpos - 1; i++) {
+                            var cxlisting = $scope.sortedListings[i];
+                            var strlx = cxlisting.title;
+                            var countx = 0;
+                            for (var j = 0; j < strp.length; j++) {
+                                if (mymatcher(strp[j], strlx))
+                                    countx++;
+                            }
+
+                            if (countx > 0&&(!cxlisting.flag)) {
+                                arrlisting.push({
+                                    title: cxlisting.title,
+                                    manufacturer: cxlisting.manufacturer,
+                                    currency: cxlisting.currency,
+                                    price: cxlisting.price
+                                });
+                                cxlisting.flag=true;
+                               // $scope.sortedListings.splice(i,1);
+                            }
+                        }
+                    }
+
+                    //push all the results in the results object
+                    $scope.myResult.push({product_name:cproduct.product_name,listings:arrlisting});
+
+                });
+
+            }
+            $scope.countResults=function(){
+                var c=0;
+                angular.forEach($scope.myResult,function(cresult){
+                    c+=cresult.listings.length;
+                });
+                $scope.resultcount=c+" matches found.";
+                $scope.loadingContent=false;
+            }
+            $scope.makeResult=function(){
+                //$scope.loadingContent=true;
+                $scope.startSorting();
+                $scope.startSearching();
+                $scope.countResults();
+            }
+            $scope.inclX=function(){
+                $scope.loadingContent=true;
+                //$scope.apply();
+                $scope.makeResult();
+            }
+
+
+        }).filter('highlight', function($sce) {
+            return function(text, phrase) {
+                var ctext=mycleanerCAPS(text);
+                var cphrase=mycleanerCAPS(phrase);
+                if (cphrase) ctext = ctext.replace(new RegExp('('+cphrase+')', 'gi'),
+                        '<span class="highlighted">$1</span>');
+
+                return $sce.trustAsHtml(ctext);
+            }
+        });
+
+    </script>
+</head>
+<body ng-controller="sortableCtrl" ng-class="{loading: loadingContent}">
+<br>
+<h2 ng-show="loadingContent"> This may take more than a minute. Please wait while the results are loaded ...</h2>
+<h1>{{resultcount}}</h1>
+<input type="checkbox"  ng-model="include_extras"/> Include listings with different manufacturers.
+<button ng-click="inclX()" >Search Again</button>
+<br>
+<br>
+<input type="checkbox" ng-model="highlightresults"/> Highlight search results. Please note that special charactars are removed.
+<br>
+<br>
+<table>
+    <tr ng-repeat="x in myResult"  ng-class-even="'even'">
+        <td>{{x.product_name}}</td>
+        <td>
+            <table>
+                <tr ng-repeat="y in x.listings">
+                    <td ng-show="highlightresults"><div ng-bind-html="y.title | highlight:x.product_name"></div></td>
+                    <td ng-show="!highlightresults">{{y.title}}</td>
+                    <td>{{y.manufacturer}}</td>
+                    <td>{{y.currency}}</td>
+                    <td>{{y.price}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

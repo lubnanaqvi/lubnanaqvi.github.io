@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Grocery List editor</title>
+    <style>
+        body{
+            text-align: center;
+            background-color: #FFDB58;
+        }
+        #listcontainer{
+            margin-top: 5%;
+            text-align: left;
+            width: 50%;
+            height: 80%;
+            background-color: white;
+            display: inline-block;
+        }
+        ul{
+            width: 70%;
+        }
+        li
+        {
+            border-bottom: solid 1px grey;
+            list-style-type: none;
+            font-size: large;
+            padding: 1%;
+        }
+        h1{
+            display: inline-block;
+            margin: 1%;
+            padding: 1%;
+        }
+        .bigbutton
+        {
+            border: 0;
+            background: none;
+            box-shadow:none;
+            border-radius: 0px;
+            padding: 2%;
+            margin: 2%;
+            background-color: black;
+            color: white;
+            display: inline;
+        }
+        .bigbutton:hover{
+            background-color: #FFDB58;
+            color: black;
+            cursor: pointer;
+        }
+        #signoutbtn{
+            float: right;
+        }
+        .xbutton, .ebutton, .unmarkbtn{
+            border: solid 1px black;
+            background: none;
+            box-shadow:none;
+            border-radius: 0px;
+            padding: 1% 2% 1% 2%;
+            margin: 1% 2% 1% 1%;
+            background-color: transparent;
+            color: black;
+            font-size: larger;
+        }
+        .xbutton:hover, .ebutton:hover, .unmarkbtn:hover{
+            background-color: black;
+            color: white;
+            cursor: pointer;
+        }
+        .xbutton, .unmarkbtn{
+            float: right;
+        }
+        #temptextbox{
+            padding:2%;
+            font-size: large;
+        }
+        #additem{
+            margin:2%;
+            padding:1%;
+        }
+        .listactionbtn{
+            padding: 1% 2% 1% 2%;
+            cursor: pointer;
+        }
+        .savediv{
+            margin:2%;
+            background-color: #B1AC85;
+            color:#F8F7F2;
+            padding:2%;
+            font-size: large;
+        }
+    </style>
+    <script>
+        function markitem(x){
+            document.getElementById('li'+x).style.textDecoration='line-through';
+            document.getElementById('li'+x).style.fontStyle='italic';
+        }
+        function unmarkitem(x){
+            document.getElementById('li'+x).style.textDecoration='none';
+            document.getElementById('li'+x).style.fontStyle='normal';
+        }
+        function edititem(x){
+            var litext=document.getElementById('lilabel'+x).textContent;
+            document.getElementById('lilabel'+x).innerHTML='<input type="text" id="temptextbox" onblur="edititemcomplete('+x+',this.value)" value="'+litext+ '">'
+        }
+        function edititemcomplete(x,y){
+            document.getElementById('lilabel'+x).innerHTML=y;
+        }
+    </script>
+</head>
+<body>
+<div id="listcontainer">
+    <h1>Your Generic List</h1>
+    <button class="bigbutton" id="signoutbtn">Sign Out</button>
+    <hr>
+    <ul id="mainlist">
+        <li id="li0"><button class="ebutton" onclick="edititem(0)">&#9998;</button><label id="lilabel0">Milk</label><button class="xbutton" onclick="markitem(0)">&#10005;</button><button class="unmarkbtn" onclick="unmarkitem(0)">&#10003;</button></li>
+        <li id="li1"><button class="ebutton" onclick="edititem(1)">&#9998;</button><label id="lilabel1">Eggs</label><button class="xbutton" onclick="markitem(1)">&#10005;</button><button class="unmarkbtn" onclick="unmarkitem(1)">&#10003;</button></li>
+        <li id="li2"><button class="ebutton" onclick="edititem(2)">&#9998;</button><label id="lilabel2">Bread</label><button class="xbutton" onclick="markitem(2)">&#10005;</button><button class="unmarkbtn" onclick="unmarkitem(2)">&#10003;</button></li>
+        <li id="li3"><button class="ebutton" onclick="edititem(3)">&#9998;</button><label id="lilabel3">Orange Juice</label><button class="xbutton" onclick="markitem(3)">&#10005;</button><button class="unmarkbtn" onclick="unmarkitem(3)">&#10003;</button></li>
+        <li id="li4"><button class="ebutton" onclick="edititem(4)">&#9998;</button><label id="lilabel4">Strawberries</label><button class="xbutton" onclick="markitem(4)">&#10005;</button><button class="unmarkbtn" onclick="unmarkitem(4)">&#10003;</button></li>
+    </ul>
+    <input type="text" id="additem">
+    <button class="listactionbtn" id="additembtn">Add</button>
+    <button class="listactionbtn" id="rselbtn">Remove Marked Items</button>
+    <div class="savediv">
+    <input type="radio" name="ltype" value="GL" checked="true"> Generic List
+    <input type="radio" name="ltype" value="CL"> Current or This week's List
+    <button class="bigbutton">Save</button>
+    </div>
+</div>
+</body>
+</html>

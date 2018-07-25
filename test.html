@@ -1,0 +1,26 @@
+<html>
+<head>
+</head>
+<body>
+</body>
+<script>
+    var endlistener=false;
+   try{ var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();}
+   catch(e){
+       console.error(e);
+   }
+    console.log('hello world');
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 5;
+    console.log('bla bla bla'+JSON.stringify(recognition));
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        console.log('You said: ', event.results[0][0].transcript);
+        var usercommand=event.results[0][0].transcript;
+        if(usercommand.indexOf('stop listening')!==-1)
+            endlistener=true;
+    };
+</script>
+</html>
