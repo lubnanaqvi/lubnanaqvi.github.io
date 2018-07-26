@@ -1,0 +1,39 @@
+[
+  {
+    "id":"0",
+    "pname":"Najma Ismat",
+    "details":"<img class='profilepic' src='photos/najmaismat.jpg'><span class='pspan'>While most of us remember Madam Najma as one of their professors at SSUET, she is actually our alumni from the Computer Engineering department who went on to do masters and Phd specializing in computer networks. Landed in Canada in 2013, Madam Najma is currently working as a part-time faculty at Seneca College.</span>"
+  },
+  {
+    "id":"1",
+    "pname":"Manzar Hussain",
+    "details":"<img class='profilepic' src='photos/manzarhussain.jpg'><span class='pspan'>Manzar Hussain, one of our senior alumni from batch 1995 Computer Engineering, is General Manager Technology & Special Projects at GEO TV Network. Landed in Canada in 2014, he completed his MBA from Iqra University, Karachi and Certificate Program in Mobile System Integeration from Humber, Canada."
+  } ,
+  {
+    "id":"2",
+    "pname":"Faisal Shahab",
+    "details":"<img class='profilepic' src='photos/faisalshahab.jpg'><span class='pspan'>Faisal Shahab from 1998 Electronics Engineering, is one of the most helpful and active members of SSUET Canada Alumni, specially known for helping and guiding several new members of our group in their job search. He has done Masters in Industrial Controls & Automation from Hamdard University. Immigrated to Canada in June 2015, he works as Manager Operations & Maintenance at Grasshopper Solar Corporation.</span>"
+  },
+  {
+    "id":"3",
+    "pname":"Saria Alvi",
+    "details":"<img class='profilepic' src='photos/sariaalvi.jpg'><span class='pspan'>Saria Alvi, one of the earlier members of SSUET Canada Alumni and admin of SSUET ladies whatsapp group, is from 1998 batch. She completed her Bachelours as well as Masters in Computer Engineering from SSUET. Immigrated to Canada in 2013, Saria works at Roger's Telecommunication as NOC Specialist.</span>"
+  },
+  {
+    "id":"4",
+    "pname":"Lubna Imran",
+    "details":"<img class='profilepic' src='photos/lubnaimran.jpg'><span class='pspan'>Lubna Imran graduated from SSUET faculty of Electronic Engineering in 2007. She is an active member of our Alumni group. She organized the events Reunion Dinner at Roman Zaman and the Breakfast get together at Sindhi. Moved to Canada in April 2013, she has worked for companies like Siemens, LG and Ericsson in Pakistan(2 years) and Ericsson and Huawei in Dubai(4 years). Lubna has completed many different telecom related certifications and qualifications. She has done her PMP, ITIL and six sigma certifications from Canada. Currenlty working in Toronto Hydro as Project Manager, she has worked for Rogers for 4 years.</span>"
+  },
+  {
+    "id":"5",
+    "pname":"Huvaida Nishat",
+    "details":"<img class='profilepic' src='photos/huvaidanishat.jpg'><span class='pspan'>Huvaida is one of the few members of our Alumni group who come from the Civil Engineering Department. A SSUET graduate from the 2010 batch, she moved to Canada in 2016 and works for Arif Shah associates as a Project Engineer. Huvaida is currently pursuing her Masters degree from University of Concordia, Montreal.</span>"
+  },
+  {
+    "id":"6",
+    "pname":"Atif Mushtaq",
+    "details":"<img class='profilepic' src='photos/atifmushtaq.jpg'><span class='pspan'>Atif Mushtaq is one of the few members of our group who are from the Biomedical discipline of Engineering. From batch 1997, he moved to Canada in 2006 after acquiring his ME in Electronics from NED University, Karachi and is currently working at Pall Corporation as Instrument Service Engineer.</span>"
+  }
+
+
+]
