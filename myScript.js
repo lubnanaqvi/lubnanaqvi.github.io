@@ -35,7 +35,8 @@ $(document).ready(function () {
             "rgba(49, 5,109, 0.7)",
             "rgba(91,3,127, 0.7)",
             "rgba(30,0,110,0.7)",
-            "rgba(0,50,130,0.7)"
+            "rgba(0,50,130,0.7)",
+            "rgba(17,5,27,0.7)"
         ];
         var windowwidth=$(window).width();
         if(windowwidth>800) {
@@ -54,7 +55,7 @@ $(document).ready(function () {
             $('.nav-list').hide();
             $('.hamburger').show();
         }
-        for(var i=0;i<8;i++)
+        for(var i=0;i<9;i++)
         {
             var j=i+1;
             var k=-100*i;//calculate vertical offset for the triangles
