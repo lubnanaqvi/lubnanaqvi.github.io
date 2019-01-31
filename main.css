@@ -1,5 +1,6 @@
 body{
-    font-family: Quicksand;
+    font-family: Quicksand,sans-serif;
+    margin: 0;
 }
 #navcontain{
     padding: 0;
@@ -136,4 +137,7 @@ ul > li a:hover:not(.active) {
     background-color: rgba(0,92,65, 0.7);
     color: white;
     padding: 2px;
+}
+#contact > *{
+    padding:1%;
 }
